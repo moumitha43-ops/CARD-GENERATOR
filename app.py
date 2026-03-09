@@ -10,6 +10,7 @@ from helpers import load_config, save_config, logger, UPLOAD_DIR, LOG_DIR
 from matcher import get_matches, validate_csv
 from send import send_all
 from scheduler import start_scheduler, update_schedule, get_next_run
+from auth import init_db, login_user, logout_user, get_user_by_token, change_password
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3  # 1 GB upload limit
@@ -22,6 +23,55 @@ def allowed_file(filename):
 
 
 _job_state = {"running": False, "progress": 0, "total": 0, "results": []}
+
+
+# ----- AUTH HELPERS -----
+
+def _get_token():
+    auth = request.headers.get("Authorization", "")
+    if auth.startswith("Bearer "):
+        return auth[7:]
+    return None
+
+
+def _require_auth():
+    return get_user_by_token(_get_token())
+
+
+# ----- AUTH ROUTES -----
+
+@app.route("/api/auth/login", methods=["POST"])
+def api_login():
+    data   = request.get_json(silent=True) or {}
+    result = login_user(data.get("username", ""), data.get("password", ""))
+    if not result["ok"]:
+        return jsonify({"error": result["error"]}), 401
+    return jsonify(result)
+
+
+@app.route("/api/auth/change-password", methods=["POST"])
+def api_change_password():
+    if not _require_auth():
+        return jsonify({"error": "Not authenticated."}), 401
+    data   = request.get_json(silent=True) or {}
+    result = change_password(data.get("old_password", ""), data.get("new_password", ""))
+    if not result["ok"]:
+        return jsonify({"error": result["error"]}), 400
+    return jsonify({"message": "Password updated."})
+
+
+@app.route("/api/auth/logout", methods=["POST"])
+def api_logout():
+    logout_user(_get_token())
+    return jsonify({"message": "Signed out."})
+
+
+@app.route("/api/auth/me", methods=["GET"])
+def api_me():
+    user = _require_auth()
+    if not user:
+        return jsonify({"error": "Not authenticated."}), 401
+    return jsonify({"user": user})
 
 
 # ─────────────────────────────────────────────
@@ -230,10 +280,6 @@ def upload_template_image():
     return jsonify({"data_uri": data_uri, "filename": secure_filename(f.filename)})
 
 
-# ─────────────────────────────────────────────
-#  LOGS
-# ─────────────────────────────────────────────
-
 @app.route("/api/logs", methods=["GET"])
 def get_logs():
     """Return last N lines of the app log for the UI log viewer."""
@@ -246,11 +292,8 @@ def get_logs():
     return jsonify({"lines": [l.rstrip() for l in lines[-n:]]})
 
 
-# ─────────────────────────────────────────────
-#  ENTRY POINT
-# ─────────────────────────────────────────────
-
 if __name__ == "__main__":
+    init_db()
     start_scheduler()
     port = int(os.environ.get("PORT", 5000))
     logger.info(f"Starting Birthday Wishes app on http://localhost:{port}")
