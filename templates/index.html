@@ -34,9 +34,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 @keyframes floatCake{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
 .auth-brand h1{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;letter-spacing:-.02em}
 .auth-brand p{font-size:13px;color:var(--muted);margin-top:4px}
-.auth-tabs{display:flex;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:28px;gap:3px}
-.auth-tab{flex:1;padding:9px 12px;border:none;background:none;border-radius:7px;font-family:'Outfit',sans-serif;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
-.auth-tab.active{background:var(--accent);color:#000;box-shadow:0 2px 10px rgba(249,115,22,.3)}
+
 .step-track{display:flex;align-items:center;margin-bottom:24px}
 .step-node{width:28px;height:28px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:var(--muted);transition:all .3s;flex-shrink:0;position:relative;z-index:1}
 .step-node.active{background:var(--accent);border-color:var(--accent);color:#000;box-shadow:0 0 0 4px rgba(249,115,22,.15)}
@@ -186,128 +184,21 @@ tr:hover td{background:var(--surface2)}
       <h1>Birthday Wishes</h1>
       <p>Bannari Amman Institute of Technology</p>
     </div>
-
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login"  onclick="switchAuthTab('login')">Sign In</button>
-      <button class="auth-tab"        id="tab-signup" onclick="switchAuthTab('signup')">Create Account</button>
-    </div>
-
-    <!-- LOGIN -->
-    <div id="login-form">
-      <div class="fg">
-        <label>Email</label>
-        <div class="inp-wrap">
-          <input type="email" id="l-email" placeholder="you@gmail.com"
-                 oninput="liveValidate(this,'email')" onkeydown="if(event.key==='Enter')doLogin()">
-          <span class="inp-icon v">✅</span><span class="inp-icon x">⚠️</span>
-        </div>
-      </div>
-      <div class="fg">
-        <label>Password</label>
-        <div class="inp-wrap">
-          <input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-          <button class="pw-eye" type="button" onclick="eyeToggle('l-pass',this)">👁</button>
-        </div>
-      </div>
-      <button class="btn-auth" onclick="doLogin()">Sign In →</button>
-      <div class="auth-msg" id="login-msg"></div>
-    </div>
-
-    <!-- SIGNUP (3 steps) -->
-    <div id="signup-form" style="display:none">
-      <div class="step-track">
-        <div class="step-node active" id="sn1">1</div>
-        <div class="step-line" id="sl1"></div>
-        <div class="step-node" id="sn2">2</div>
-        <div class="step-line" id="sl2"></div>
-        <div class="step-node" id="sn3">3</div>
-      </div>
-
-      <!-- Step 1 -->
-      <div class="signup-step active" id="ss1">
-        <div class="step-title">Create your account</div>
-        <div class="fg">
-          <label>Full Name</label>
-          <div class="inp-wrap">
-            <input type="text" id="r-name" placeholder="e.g. Dr. A. Sharma" oninput="liveValidate(this,'name')">
-            <span class="inp-icon v">✅</span>
-          </div>
-          <div class="ferr" id="fe-name">Please enter your name.</div>
-        </div>
-        <div class="fg">
-          <label>Email Address</label>
-          <div class="inp-wrap">
-            <input type="email" id="r-email" placeholder="sender@gmail.com" oninput="liveValidate(this,'email')">
-            <span class="inp-icon v">✅</span><span class="inp-icon x">⚠️</span>
-          </div>
-          <div class="ferr" id="fe-email">Enter a valid email address.</div>
-        </div>
-        <div class="fg">
-          <label>Password</label>
-          <div class="inp-wrap">
-            <input type="password" id="r-pass" placeholder="Min. 8 characters" oninput="strengthCheck(this)">
-            <button class="pw-eye" type="button" onclick="eyeToggle('r-pass',this)">👁</button>
-          </div>
-          <div id="pw-bars" style="display:none">
-            <div class="pw-bars"><div class="pw-bar" id="pb1"></div><div class="pw-bar" id="pb2"></div><div class="pw-bar" id="pb3"></div><div class="pw-bar" id="pb4"></div></div>
-            <div class="pw-hint" id="pw-hint">Strength: —</div>
-          </div>
-          <div class="ferr" id="fe-pass">Password must be at least 8 characters.</div>
-        </div>
-        <div class="fg">
-          <label>Confirm Password</label>
-          <div class="inp-wrap">
-            <input type="password" id="r-confirm" placeholder="Repeat password" oninput="liveValidate(this,'confirm')">
-            <span class="inp-icon v">✅</span><span class="inp-icon x">⚠️</span>
-          </div>
-          <div class="ferr" id="fe-confirm">Passwords do not match.</div>
-        </div>
-        <button class="btn-auth" onclick="stepTo(2)">Continue →</button>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="signup-step" id="ss2">
-        <div class="step-title">Connect Gmail</div>
-        <div class="callout">
-          <strong>🔐 Why is this needed?</strong>
-          Your Gmail App Password lets the system send birthday emails on your behalf — it's a separate 16-character code, not your main password.
-        </div>
-        <div class="fg">
-          <label>Sender Gmail Address</label>
-          <div class="inp-wrap">
-            <input type="email" id="r-gmail" placeholder="sender@gmail.com" oninput="liveValidate(this,'email')">
-            <span class="inp-icon v">✅</span><span class="inp-icon x">⚠️</span>
-          </div>
-          <div class="ferr" id="fe-gmail">Enter a valid Gmail address.</div>
-        </div>
-        <div class="fg">
-          <label>Gmail App Password <span class="hint">(16 chars, spaces OK)</span></label>
-          <div class="inp-wrap">
-            <input type="password" id="r-apppw" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" oninput="validateAppPw(this)">
-            <button class="pw-eye" type="button" onclick="eyeToggle('r-apppw',this)">👁</button>
-          </div>
-          <div class="ferr" id="fe-apppw">App password should be 16 characters (spaces ignored).</div>
-        </div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6">
-          📍 Generate at: <strong style="color:var(--text)">myaccount.google.com → Security → App passwords</strong>
-        </div>
-        <button class="btn-auth" onclick="stepTo(3)">Continue →</button>
-        <button class="btn-back" onclick="stepTo(1)">← Back</button>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="signup-step" id="ss3">
-        <div class="step-title">Review &amp; Create</div>
-        <div class="review-box" id="review-box"></div>
-        <div class="check-row">
-          <input type="checkbox" id="terms-check">
-          <label for="terms-check">I confirm this Gmail App Password is correct and authorise it for sending birthday wishes only.</label>
-        </div>
-        <button class="btn-auth" onclick="doSignup()">🎉 Create Account</button>
-        <button class="btn-back" onclick="stepTo(2)">← Back</button>
-        <div class="auth-msg" id="signup-msg"></div>
+    <div class="fg">
+      <label>Username</label>
+      <div class="inp-wrap">
+        <input type="text" id="l-user" placeholder="BIT" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
     </div>
+    <div class="fg">
+      <label>Password</label>
+      <div class="inp-wrap">
+        <input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="pw-eye" type="button" onclick="eyeToggle('l-pass',this)">👁</button>
+      </div>
+    </div>
+    <button class="btn-auth" onclick="doLogin()">Sign In →</button>
+    <div class="auth-msg" id="login-msg"></div>
   </div>
 </div>
 
@@ -325,6 +216,7 @@ tr:hover td{background:var(--surface2)}
     <a class="nav-item" onclick="showPage('settings',this)" href="#"><span class="nav-icon">⚙️</span><span>Settings</span></a>
     <a class="nav-item" onclick="showPage('logs',this)" href="#"><span class="nav-icon">📜</span><span>Logs</span></a>
     <div class="sidebar-bottom">
+      <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;font-size:13px;" onclick="openChangePw()">🔑 Change Password</button>
       <button class="btn-signout" onclick="doSignOut()">Sign Out</button>
     </div>
   </nav>
@@ -532,50 +424,178 @@ tr:hover td{background:var(--surface2)}
   </div>
 </div>
 
+
+<!-- ══ CHANGE PASSWORD MODAL ══ -->
+<div class="modal-bg" id="changepw-modal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header">
+      <h2>🔑 Change Password</h2>
+      <button class="modal-close" onclick="closeChangePw()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <label>Current Password</label>
+        <div class="inp-wrap">
+          <input type="password" id="cp-old" placeholder="Enter current password">
+          <button class="pw-eye" type="button" onclick="eyeToggle('cp-old',this)">👁</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label>New Password</label>
+        <div class="inp-wrap">
+          <input type="password" id="cp-new" placeholder="Min. 8 characters" oninput="strengthCheck(this)">
+          <button class="pw-eye" type="button" onclick="eyeToggle('cp-new',this)">👁</button>
+        </div>
+        <div id="pw-bars2" style="display:none">
+          <div class="pw-bars"><div class="pw-bar" id="pb1b"></div><div class="pw-bar" id="pb2b"></div><div class="pw-bar" id="pb3b"></div><div class="pw-bar" id="pb4b"></div></div>
+          <div class="pw-hint" id="pw-hint2">Strength: —</div>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Confirm New Password</label>
+        <div class="inp-wrap">
+          <input type="password" id="cp-confirm" placeholder="Repeat new password">
+        </div>
+      </div>
+      <div class="auth-msg" id="changepw-msg" style="display:none;margin-bottom:12px"></div>
+      <button class="btn-auth" onclick="doChangePw()">Update Password</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 /* ══════════════════════════════════════════════════
-   LOCAL-STORAGE AUTH
+   AUTH  —  single shared account, server-side session
 ══════════════════════════════════════════════════ */
-const USERS_KEY   = 'bw_users_v2';
-const SESSION_KEY = 'bw_session_v2';
-const getUsers   = ()  => JSON.parse(localStorage.getItem(USERS_KEY)   || '[]');
-const saveUsers  = u   => localStorage.setItem(USERS_KEY,   JSON.stringify(u));
-const getSession = ()  => JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
-const setSession = s   => localStorage.setItem(SESSION_KEY, JSON.stringify(s));
-const clearSession = ()=> localStorage.removeItem(SESSION_KEY);
+let _authToken = sessionStorage.getItem('bw_token') || null;
+const saveToken   = t  => { _authToken = t; sessionStorage.setItem('bw_token', t); };
+const clearToken  = () => { _authToken = null; sessionStorage.removeItem('bw_token'); };
+const authHeaders = () => _authToken
+  ? {'Authorization':'Bearer '+_authToken,'Content-Type':'application/json'}
+  : {'Content-Type':'application/json'};
 
-/* ══ Auth tab switch ══ */
-function switchAuthTab(tab) {
-  document.getElementById('login-form').style.display  = tab==='login'  ? '' : 'none';
-  document.getElementById('signup-form').style.display = tab==='signup' ? '' : 'none';
-  document.getElementById('tab-login').classList.toggle('active',  tab==='login');
-  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+/* ══ Login ══ */
+async function doLogin() {
+  const user = document.getElementById('l-user').value.trim();
+  const pass = document.getElementById('l-pass').value;
+  const btn  = document.querySelector('#auth-overlay .btn-auth');
+  btn.disabled=true; btn.textContent='Signing in…';
+  try {
+    const res  = await fetch('/api/auth/login',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({username:user, password:pass})
+    });
+    const data = await res.json();
+    if (!res.ok){
+      showAuthMsg('login-msg', data.error||'Incorrect username or password.','bad');
+      btn.disabled=false; btn.textContent='Sign In →'; return;
+    }
+    saveToken(data.token);
+    launchApp(data.user);
+  } catch(e){
+    showAuthMsg('login-msg','Network error: '+e.message,'bad');
+    btn.disabled=false; btn.textContent='Sign In →';
+  }
 }
 
-/* ══ Inline validators ══ */
+/* ══ Sign out ══ */
+async function doSignOut() {
+  if (_authToken) await fetch('/api/auth/logout',{method:'POST',headers:authHeaders()}).catch(()=>{});
+  clearToken(); stopAutoRefresh();
+  document.getElementById('app-shell').style.display   ='none';
+  document.getElementById('auth-overlay').style.display='flex';
+  document.getElementById('l-user').value='';
+  document.getElementById('l-pass').value='';
+  document.getElementById('login-msg').style.display='none';
+}
+
+/* ══ Launch app ══ */
+function launchApp(user) {
+  document.getElementById('auth-overlay').style.display='none';
+  document.getElementById('app-shell').style.display   ='flex';
+  document.getElementById('sb-name').textContent  = user.name  || user.username || 'BIT';
+  document.getElementById('sb-email').textContent = 'Admin Account';
+  loadDashboard(); loadTemplate(); loadSettings();
+}
+
+/* ══ Auto-login on page load ══ */
+window.addEventListener('DOMContentLoaded', async () => {
+  if (_authToken) {
+    try {
+      const res  = await fetch('/api/auth/me',{headers:authHeaders()});
+      const data = await res.json();
+      if (res.ok && data.user){ launchApp(data.user); return; }
+    } catch(e){}
+    clearToken();
+  }
+  document.getElementById('app-shell').style.display   ='none';
+  document.getElementById('auth-overlay').style.display='flex';
+});
+
+/* ══ Change Password modal ══ */
+function openChangePw(){
+  document.getElementById('cp-old').value='';
+  document.getElementById('cp-new').value='';
+  document.getElementById('cp-confirm').value='';
+  document.getElementById('changepw-msg').style.display='none';
+  document.getElementById('changepw-modal').classList.add('open');
+}
+function closeChangePw(){ document.getElementById('changepw-modal').classList.remove('open'); }
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('changepw-modal').addEventListener('click',function(e){if(e.target===this)closeChangePw();});
+});
+
+async function doChangePw(){
+  const oldPw  = document.getElementById('cp-old').value;
+  const newPw  = document.getElementById('cp-new').value;
+  const confirm= document.getElementById('cp-confirm').value;
+  const msgEl  = document.getElementById('changepw-msg');
+  const showMsg= (txt,type)=>{msgEl.textContent=txt;msgEl.className='auth-msg '+(type==='ok'?'ok':'bad');msgEl.style.display='block';};
+  if (!oldPw)           return showMsg('Enter your current password.','bad');
+  if (newPw.length < 8) return showMsg('New password must be at least 8 characters.','bad');
+  if (newPw !== confirm) return showMsg('New passwords do not match.','bad');
+  const btn = document.querySelector('#changepw-modal .btn-auth');
+  btn.disabled=true; btn.textContent='Updating…';
+  try{
+    const res  = await fetch('/api/auth/change-password',{
+      method:'POST', headers:authHeaders(),
+      body: JSON.stringify({old_password:oldPw, new_password:newPw})
+    });
+    const data = await res.json();
+    if (!res.ok){ showMsg(data.error||'Failed.','bad'); btn.disabled=false; btn.textContent='Update Password'; return; }
+    showMsg('✅ Password updated successfully!','ok');
+    setTimeout(closeChangePw, 1500);
+  } catch(e){ showMsg('Network error: '+e.message,'bad'); }
+  btn.disabled=false; btn.textContent='Update Password';
+}
+
+/* ══ Inline validators (kept for Change PW strength meter) ══ */
 function liveValidate(el, type) {
   let valid = false;
   if (type==='email')   valid = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(el.value.trim());
   if (type==='name')    valid = el.value.trim().length >= 2;
-  if (type==='confirm') valid = el.value === document.getElementById('r-pass').value && el.value.length>0;
   el.classList.toggle('ok',  valid);
   el.classList.toggle('err', !valid && el.value.length>0);
 }
 function strengthCheck(el) {
+  const barWrap = document.getElementById('pw-bars2') || document.getElementById('pw-bars');
+  const hintEl  = document.getElementById('pw-hint2')  || document.getElementById('pw-hint');
+  const b1 = document.getElementById('pb1b') || document.getElementById('pb1');
+  const b2 = document.getElementById('pb2b') || document.getElementById('pb2');
+  const b3 = document.getElementById('pb3b') || document.getElementById('pb3');
+  const b4 = document.getElementById('pb4b') || document.getElementById('pb4');
   const v = el.value;
-  document.getElementById('pw-bars').style.display = v.length ? 'block' : 'none';
+  if (barWrap) barWrap.style.display = v.length ? 'block' : 'none';
   let s = 0;
-  if (v.length>=8)        s++;
-  if (/[A-Z]/.test(v))   s++;
-  if (/[0-9]/.test(v))   s++;
+  if (v.length>=8)             s++;
+  if (/[A-Z]/.test(v))         s++;
+  if (/[0-9]/.test(v))         s++;
   if (/[^A-Za-z0-9]/.test(v)) s++;
   const cls = s<=1?'w':s<=2?'m':'s';
-  ['pb1','pb2','pb3','pb4'].forEach((id,i)=>{
-    document.getElementById(id).className = 'pw-bar' + (i<s?' '+cls:'');
-  });
-  document.getElementById('pw-hint').textContent = 'Strength: '+['','Weak','Fair','Good','Strong'][s];
+  [b1,b2,b3,b4].forEach((b,i)=>{ if(b) b.className='pw-bar'+(i<s?' '+cls:''); });
+  if (hintEl) hintEl.textContent='Strength: '+['','Weak','Fair','Good','Strong'][s];
 }
 function validateAppPw(el) {
   const ok = el.value.replace(/\s/g,'').length===16;
@@ -587,123 +607,12 @@ function eyeToggle(id, btn) {
   el.type = el.type==='password' ? 'text' : 'password';
   btn.textContent = el.type==='password' ? '👁' : '🙈';
 }
-function showFerr(id, show) { document.getElementById(id).classList.toggle('show', show); }
 function showAuthMsg(id, msg, type) {
   const el = document.getElementById(id);
   el.textContent = msg;
   el.className   = 'auth-msg ' + (type==='ok'?'ok':'bad');
   el.style.display = 'block';
 }
-
-/* ══ Signup steps ══ */
-function stepTo(n) {
-  if (n===2) {
-    const name=document.getElementById('r-name').value.trim();
-    const email=document.getElementById('r-email').value.trim();
-    const pass=document.getElementById('r-pass').value;
-    const confirm=document.getElementById('r-confirm').value;
-    let ok=true;
-    if (name.length<2)  {showFerr('fe-name',true);   ok=false} else showFerr('fe-name',false);
-    if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)){showFerr('fe-email',true);ok=false} else showFerr('fe-email',false);
-    if (pass.length<8)  {showFerr('fe-pass',true);   ok=false} else showFerr('fe-pass',false);
-    if (pass!==confirm) {showFerr('fe-confirm',true); ok=false} else showFerr('fe-confirm',false);
-    if (!ok) return;
-    const users=getUsers();
-    if (users.find(u=>u.email===email)) {
-      const fe=document.getElementById('fe-email');
-      fe.textContent='An account with this email already exists.';
-      fe.classList.add('show'); return;
-    }
-  }
-  if (n===3) {
-    const gmail=document.getElementById('r-gmail').value.trim();
-    const apppw=document.getElementById('r-apppw').value.replace(/\s/g,'');
-    let ok=true;
-    if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(gmail)){showFerr('fe-gmail',true);ok=false} else showFerr('fe-gmail',false);
-    if (apppw.length!==16){showFerr('fe-apppw',true);ok=false} else showFerr('fe-apppw',false);
-    if (!ok) return;
-    document.getElementById('review-box').innerHTML=`
-      <div class="rv">Name: <span>${esc(document.getElementById('r-name').value.trim())}</span></div>
-      <div class="rv">Account Email: <span>${esc(document.getElementById('r-email').value.trim())}</span></div>
-      <div class="rv">Sender Gmail: <span>${esc(gmail)}</span></div>
-      <div class="rv">App Password: <span>${'•'.repeat(16)}</span></div>`;
-  }
-  for (let i=1;i<=3;i++) {
-    document.getElementById('ss'+i).classList.toggle('active', i===n);
-    const node=document.getElementById('sn'+i);
-    node.classList.toggle('active', i===n);
-    node.classList.toggle('done', i<n);
-    if (i<3) document.getElementById('sl'+i).classList.toggle('done', i<n);
-  }
-}
-
-/* ══ Signup submit ══ */
-function doSignup() {
-  if (!document.getElementById('terms-check').checked) {
-    showAuthMsg('signup-msg','Please accept the terms to continue.','bad'); return;
-  }
-  const name  = document.getElementById('r-name').value.trim();
-  const email = document.getElementById('r-email').value.trim();
-  const pass  = document.getElementById('r-pass').value;
-  const gmail = document.getElementById('r-gmail').value.trim();
-  const apppw = document.getElementById('r-apppw').value;
-  const users = getUsers();
-  users.push({name, email, pass, gmail, apppw, created: new Date().toISOString()});
-  saveUsers(users);
-  showAuthMsg('signup-msg','🎉 Account created! Signing you in…','ok');
-  setTimeout(()=>launchApp({name,email,gmail,apppw}), 900);
-}
-
-/* ══ Login submit ══ */
-function doLogin() {
-  const email = document.getElementById('l-email').value.trim();
-  const pass  = document.getElementById('l-pass').value;
-  const user  = getUsers().find(u=>u.email===email && u.pass===pass);
-  if (!user){showAuthMsg('login-msg','Incorrect email or password.','bad');return;}
-  launchApp(user);
-}
-
-/* ══ Sign out ══ */
-function doSignOut() {
-  clearSession(); stopAutoRefresh();
-  document.getElementById('app-shell').style.display   = 'none';
-  document.getElementById('auth-overlay').style.display= 'flex';
-  stepTo(1);
-  ['r-name','r-email','r-pass','r-confirm','r-gmail','r-apppw','l-email','l-pass'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){el.value='';el.className=el.className.replace(/ ok| err/g,'');}
-  });
-  document.getElementById('terms-check').checked=false;
-  document.getElementById('login-msg').style.display='none';
-}
-
-/* ══ Launch app ══ */
-function launchApp(user) {
-  document.getElementById('auth-overlay').style.display='none';
-  document.getElementById('app-shell').style.display   ='flex';
-  document.getElementById('sb-name').textContent  = user.name  || user.email;
-  document.getElementById('sb-email').textContent = user.email || '';
-  setSession({name:user.name, email:user.email, gmail:user.gmail, apppw:user.apppw});
-  // Push credentials to server
-  if (user.gmail && user.apppw) {
-    fetch('/api/settings',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({sender_email:user.gmail, app_password:user.apppw})
-    }).catch(()=>{});
-  }
-  loadDashboard(); loadTemplate(); loadSettings();
-}
-
-/* ── Auto-login on page load ── */
-window.addEventListener('DOMContentLoaded',()=>{
-  const s=getSession();
-  if (s) {
-    const user=getUsers().find(u=>u.email===s.email);
-    if (user){launchApp(user);return;}
-  }
-  document.getElementById('app-shell').style.display   ='none';
-  document.getElementById('auth-overlay').style.display='flex';
-});
 
 /* ══════════════════════════════════════════════════
    NAVIGATION
