@@ -164,8 +164,8 @@ tr:hover td{background:var(--surface2)}
 .preview-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
 .preview-select{flex:1;min-width:200px;padding:9px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none}
 .preview-select:focus{border-color:var(--accent)}
-.preview-frame-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#f6e3b4;min-height:420px;position:relative}
-.preview-frame-wrap iframe{width:100%;height:420px;border:none;display:block}
+.preview-frame-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#f6e3b4;position:relative;height:520px}
+.preview-frame-wrap iframe{width:100%;height:100%;border:none;display:block;transform-origin:top left}
 .preview-spinner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#f6e3b4;font-size:13px;color:#7b3f00;font-weight:500}
 .spinner-ring{width:36px;height:36px;border:3px solid rgba(123,63,0,.2);border-top-color:#c8962e;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -213,7 +213,7 @@ tr:hover td{background:var(--surface2)}
     <a class="nav-item active" onclick="showPage('dashboard',this)" href="#"><span class="nav-icon">🏠</span><span>Dashboard</span></a>
     <a class="nav-item" onclick="showPage('csv',this)" href="#"><span class="nav-icon">📋</span><span>CSV Manager</span></a>
     <a class="nav-item" onclick="showPage('template',this)" href="#"><span class="nav-icon">🎨</span><span>Card Template</span></a>
-    <!--<a class="nav-item" onclick="showPage('settings',this)" href="#"><span class="nav-icon">⚙️</span><span>Settings</span></a>-->
+    <a class="nav-item" onclick="showPage('settings',this)" href="#"><span class="nav-icon">⚙️</span><span>Settings</span></a>
     <a class="nav-item" onclick="showPage('logs',this)" href="#"><span class="nav-icon">📜</span><span>Logs</span></a>
     <div class="sidebar-bottom">
       <button class="btn btn-secondary" style="width:100%;margin-bottom:8px;font-size:13px;" onclick="openChangePw()">🔑 Change Password</button>
@@ -783,7 +783,35 @@ async function renderPreview() {
     const rendered=data.html.replace(/\{\{name\}\}/g, name);
     const doc=iframe.contentDocument||iframe.contentWindow.document;
     doc.open(); doc.write(rendered); doc.close();
-    setTimeout(()=>{spinner.style.display='none';iframe.style.display='block';}, 400);
+    setTimeout(()=>{
+      spinner.style.display='none';
+      iframe.style.display='block';
+      // Scale iframe content to fit the container with no scrollbars
+      try {
+        const iDoc   = iframe.contentDocument || iframe.contentWindow.document;
+        const body   = iDoc.body;
+        const html   = iDoc.documentElement;
+        // Get the full natural height of the rendered card
+        const contentH = Math.max(
+          body.scrollHeight, body.offsetHeight,
+          html.scrollHeight, html.offsetHeight
+        );
+        const contentW = Math.max(body.scrollWidth, body.offsetWidth, html.scrollWidth, html.offsetWidth);
+        const wrapW  = frameWrap.clientWidth;
+        const wrapH  = frameWrap.clientHeight;
+        // Scale to fit width; if it still overflows height, scale down further
+        let scale = wrapW / contentW;
+        if (contentH * scale > wrapH) scale = wrapH / contentH;
+        scale = Math.min(scale, 1); // never upscale
+        iframe.style.width  = (wrapW / scale) + 'px';
+        iframe.style.height = (wrapH / scale) + 'px';
+        iframe.style.transform = 'scale(' + scale + ')';
+        iframe.style.transformOrigin = 'top left';
+        // Disable scroll inside iframe
+        body.style.overflow = 'hidden';
+        html.style.overflow = 'hidden';
+      } catch(se){ /* cross-origin guard */ }
+    }, 500);
   } catch(e){toast('Preview failed: '+e.message,'error');frameWrap.style.display='none';}
 }
 
